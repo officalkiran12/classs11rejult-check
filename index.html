@@ -136,8 +136,21 @@
         gap: 12px;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
         .sr-row { flex-direction: column; }
+    }
+
+    @media (max-width: 480px) {
+        .front-page-view { margin-top: 10px; }
+        .front-header { padding: 15px 10px; }
+        .front-header h1 { font-size: 18px; }
+        .front-header .addr { font-size: 12px; }
+        .front-header .exam { font-size: 11px; padding: 3px 10px; }
+        .search-card { padding: 15px; }
+        .sr-row input { padding: 12px 12px; font-size: 14px; }
+        .sr-row button { padding: 12px; font-size: 14px; }
+        .dev-contact a { width: 100%; justify-content: center; }
+        .db-info { font-size: 10px; flex-direction: column; gap: 4px; align-items: center; }
     }
 
     .sr-row input {
