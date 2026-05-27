@@ -725,8 +725,11 @@
     }
 
     // marksheet builder and visual renderer
-    function buildMarksheetView(student) {
+    function buildMarksheetView(student, noPush) {
         document.body.classList.add("result-active");
+        if (!noPush) {
+            history.pushState({view: 'result', student: student}, '');
+        }
         
         document.getElementById("mName").textContent = student.name;
         document.getElementById("mRoll").textContent = student.symbolNo || student.rollNo;
@@ -796,16 +799,28 @@
         document.getElementById("searchInput").addEventListener("input", updateSuggestions);
 
         document.getElementById("backBtn").addEventListener("click", function() {
-            document.body.classList.remove("result-active");
-            document.getElementById("searchInput").value = "";
-            document.getElementById("errorBox").classList.remove("show");
-            suggestBox.classList.remove('show');
+            history.back();
+        });
+
+        window.addEventListener('popstate', function(e) {
+            if (e.state && e.state.view === 'result') {
+                if (e.state.student) buildMarksheetView(e.state.student, true);
+                return;
+            }
+            goToFrontPage();
         });
 
         window.addEventListener('resize', function() {
             if (document.body.classList.contains("result-active")) fitMarksheetToScreen();
         });
     };
+
+    function goToFrontPage() {
+        document.body.classList.remove("result-active");
+        document.getElementById("searchInput").value = "";
+        document.getElementById("errorBox").classList.remove("show");
+        suggestBox.classList.remove('show');
+    }
 
     window.addEventListener('beforeprint', function(){});
     window.addEventListener('afterprint', function(){});
