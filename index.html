@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grade Ledger System - Gurujajur Model Secondary School</title>
 <style>
     :root {
@@ -43,23 +43,26 @@
         padding: 0;
     }
 
-    html, body {
+    html {
         height: 100%;
         width: 100%;
-        overflow: hidden; /* hide global scrollbar (scaling + inner container handles it) */
+    }
+    body {
+        min-height: 100%;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
         font-family: "Times New Roman", Georgia, serif;
         background-color: var(--bg-color);
     }
 
     /* main scrolling container shows redirect-like page view */
     #viewContainer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        min-height: 100vh;
+        overflow: visible;
         padding: 15px;
         display: flex;
         flex-direction: column;
@@ -287,7 +290,6 @@
 
     @media (max-width: 768px) {
         body.result-active .marksheet-page-view { display: flex; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: var(--bg-color); overflow: auto; -webkit-overflow-scrolling: touch; }
-        .marksheet-page-view .nav-bar { display: flex; }
         .marksheet-page-view .nav-bar { position: sticky; top: 0; z-index: 100; background: #fff; padding: 8px 10px; margin: 0; width: 100%; box-sizing: border-box; max-width: 100%; }
         .marksheet-page-view .nav-btn { padding: 6px 12px; font-size: 11px; }
         #transformWrapper { width: 1400px; margin: 0 auto; }
@@ -469,7 +471,7 @@
         #viewContainer { position: static !important; overflow: visible !important; padding: 0 !important; display: block !important; margin: 0 !important; max-width: 100% !important; }
         .front-page-view, .nav-bar { display: none !important; }
         .marksheet-page-view { display: block !important; width: auto !important; overflow: visible !important; }
-        #transformWrapper { width: 1400px !important; margin: 0 auto !important; zoom: none !important; transform: scale(0.72) !important; transform-origin: top center !important; }
+        #transformWrapper { width: 1400px !important; margin: 0 auto !important; transform: scale(0.72) !important; transform-origin: top center !important; }
         .ledger-card { border: 3px double #000 !important; box-shadow: none !important; width: 1400px !important; min-height: auto !important; padding: 25px 30px !important; margin: 0 !important; }
         .ledger-watermark { display: none !important; }
         .disclaimer-screen { display: none !important; }
@@ -773,9 +775,13 @@
         const vw = pageView.clientWidth;
         if (vw < 1400) {
             const scale = (vw - 20) / 1400;
-            wrapper.style.zoom = scale;
+            wrapper.style.transform = 'scale(' + scale + ')';
+            wrapper.style.transformOrigin = 'top left';
+            wrapper.style.width = Math.round(1400 * scale) + 'px';
         } else {
-            wrapper.style.zoom = '';
+            wrapper.style.transform = '';
+            wrapper.style.transformOrigin = '';
+            wrapper.style.width = '1400px';
         }
     }
 
@@ -807,6 +813,55 @@
     function printMarksheet() {
         window.print();
     }
+
+    // Pull-to-refresh: pull down at top of marksheet to go back to search
+    let ptrStartY = 0;
+    let ptrPulling = false;
+    let ptrActive = false;
+    const marksheetPage = document.getElementById('marksheetPage');
+    const ptrIndicator = document.createElement('div');
+    ptrIndicator.id = 'ptrIndicator';
+    ptrIndicator.textContent = '⬇ Pull to go back';
+    ptrIndicator.style.cssText = 'position:fixed;top:-50px;left:0;right:0;z-index:99999;text-align:center;padding:12px;font-size:14px;font-weight:bold;background:#fff;border-bottom:2px solid var(--gold);transition:top 0.3s, background 0.2s;';
+    document.body.appendChild(ptrIndicator);
+
+    marksheetPage.addEventListener('touchstart', function(e) {
+        ptrActive = document.body.classList.contains('result-active');
+        if (ptrActive && marksheetPage.scrollTop <= 0) {
+            ptrStartY = e.touches[0].clientY;
+            ptrPulling = true;
+        }
+    }, {passive: true});
+
+    marksheetPage.addEventListener('touchmove', function(e) {
+        if (!ptrPulling || !ptrActive) return;
+        const dy = e.touches[0].clientY - ptrStartY;
+        if (dy > 0 && marksheetPage.scrollTop <= 0) {
+            if (dy > 80) {
+                ptrIndicator.textContent = '⬅ Release to go back';
+                ptrIndicator.style.top = Math.min(dy - 50, 20) + 'px';
+                ptrIndicator.style.background = '#c9a03a';
+                ptrIndicator.style.color = '#fff';
+            } else {
+                ptrIndicator.textContent = '⬇ Pull to go back';
+                ptrIndicator.style.top = (dy - 50) + 'px';
+                ptrIndicator.style.background = '#fff';
+                ptrIndicator.style.color = '#0d1f3c';
+            }
+        }
+    }, {passive: true});
+
+    marksheetPage.addEventListener('touchend', function(e) {
+        if (!ptrPulling) return;
+        const dy = e.changedTouches[0].clientY - ptrStartY;
+        ptrPulling = false;
+        ptrIndicator.style.top = '-50px';
+        ptrIndicator.style.background = '#fff';
+        ptrIndicator.style.color = '#0d1f3c';
+        if (dy > 80 && ptrActive && marksheetPage.scrollTop <= 0) {
+            document.getElementById('backBtn').click();
+        }
+    }, {passive: true});
     </script>
 </body>
 </html>
