@@ -267,10 +267,15 @@
         .nav-btn { padding: 8px 14px; font-size: 12px; }
     }
 
-    /* --- fully responsive marksheet --- */
+    /* --- marksheet: fixed desktop width, auto-zooms on mobile, native pinch-to-zoom works --- */
+    #transformWrapper {
+        width: 1400px;
+        margin: 0 auto;
+    }
+
     .ledger-card {
         background: linear-gradient(135deg, var(--paper-color), #fcfcfc);
-        width: 100%;
+        width: 1400px;
         min-height: 900px;
         border: 3px double var(--border-color);
         padding: 45px;
@@ -281,26 +286,15 @@
     }
 
     @media (max-width: 768px) {
-        .ledger-card { padding: 20px; min-height: auto; }
-        .ledger-header { grid-template-columns: 80px 1fr 80px; gap: 8px; }
-        .emblem-box { width: 70px; height: 70px; }
-        .emblem-box img { max-width: 60px !important; max-height: 60px !important; }
-        .header-identity h1 { font-size: 16px; }
-        .header-identity h2 { font-size: 12px; }
-        .header-identity h3 { font-size: 11px; }
-        .header-identity h4 { font-size: 13px; }
-        .student-profile-card { grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .summary-ribbon { flex-direction: column; gap: 10px; text-align: center; }
+        body.result-active .marksheet-page-view { display: flex; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: var(--bg-color); overflow: auto; -webkit-overflow-scrolling: touch; }
+        .marksheet-page-view .nav-bar { display: flex; }
+        .marksheet-page-view .nav-bar { position: sticky; top: 0; z-index: 100; background: #fff; padding: 8px 10px; margin: 0; width: 100%; box-sizing: border-box; max-width: 100%; }
+        .marksheet-page-view .nav-btn { padding: 6px 12px; font-size: 11px; }
+        #transformWrapper { width: 1400px; margin: 0 auto; }
+        .ledger-card { padding: 20px 25px; }
     }
-
     @media (max-width: 480px) {
-        .ledger-card { padding: 12px; }
-        .ledger-header { grid-template-columns: 60px 1fr 60px; }
-        .emblem-box { width: 50px; height: 50px; }
-        .emblem-box img { max-width: 45px !important; max-height: 45px !important; }
-        .student-profile-card { grid-template-columns: 1fr; gap: 6px; padding: 10px; }
-        .ledger-header { padding-bottom: 12px; margin-bottom: 15px; }
-        .profile-item { font-size: 12px; }
+        .ledger-card { padding: 12px 15px; }
     }
 
     .ledger-watermark {
@@ -474,8 +468,9 @@
         html, body { overflow: visible !important; height: auto !important; background: #fff; margin: 0 !important; padding: 0 !important; }
         #viewContainer { position: static !important; overflow: visible !important; padding: 0 !important; display: block !important; margin: 0 !important; max-width: 100% !important; }
         .front-page-view, .nav-bar { display: none !important; }
-        .marksheet-page-view { display: block !important; width: 100% !important; }
-        .ledger-card { border: 3px double #000 !important; box-shadow: none !important; width: 100% !important; min-height: auto !important; padding: 15px 20px !important; transform: none !important; margin: 0 !important; }
+        .marksheet-page-view { display: block !important; width: auto !important; overflow: visible !important; }
+        #transformWrapper { width: 1400px !important; margin: 0 auto !important; zoom: none !important; transform: scale(0.72) !important; transform-origin: top center !important; }
+        .ledger-card { border: 3px double #000 !important; box-shadow: none !important; width: 1400px !important; min-height: auto !important; padding: 25px 30px !important; margin: 0 !important; }
         .ledger-watermark { display: none !important; }
         .disclaimer-screen { display: none !important; }
         .disclaimer-print { display: block !important; text-align: center !important; font-size: 8px !important; color: #999 !important; margin-top: 5px !important; padding-top: 3px !important; border-top: 1px dashed #ccc !important; }
@@ -564,7 +559,7 @@
                 <button class="nav-btn nav-btn-print" onclick="printMarksheet()">💾 Save PDF</button>
             </div>
 
-            <main class="ledger-card">
+            <div id="transformWrapper"><main class="ledger-card">
                     
                     <div class="ledger-watermark">GMS SCHOOL</div>
 
@@ -621,7 +616,7 @@
 
                     <div class="disclaimer-print">Developed by Kiran Chettri — Unofficial result viewer (not affiliated with the school)</div>
 
-                </main>
+                </main></div>
             
         </div>
     </div>
@@ -768,6 +763,20 @@
             tbody.appendChild(tr);
         });
 
+        fitMarksheetToScreen();
+    }
+
+    function fitMarksheetToScreen() {
+        const wrapper = document.getElementById('transformWrapper');
+        const pageView = document.querySelector('.marksheet-page-view');
+        if (!wrapper || !pageView) return;
+        const vw = pageView.clientWidth;
+        if (vw < 1400) {
+            const scale = (vw - 20) / 1400;
+            wrapper.style.zoom = scale;
+        } else {
+            wrapper.style.zoom = '';
+        }
     }
 
     // initial event controllers
@@ -785,6 +794,10 @@
             document.getElementById("searchInput").value = "";
             document.getElementById("errorBox").classList.remove("show");
             suggestBox.classList.remove('show');
+        });
+
+        window.addEventListener('resize', function() {
+            if (document.body.classList.contains("result-active")) fitMarksheetToScreen();
         });
     };
 
