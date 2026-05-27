@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Grade Ledger System - Gurujajur Model Secondary School</title>
+<style>
+    :root {
+        --bg-color: #f0f2f5;
+        --paper-color: #ffffff;
+        --text-color: #1a1a1a;
+        --border-color: #2c3e50;
+        --navy: #0d1f3c;
+        --gold: #c9a03a;
+        --gold-light: #e8d48b;
+        --cream: #faf6ee;
+        --pass-color: #1b8a3d;
+        --fail-color: #c0392b;
+        --fail-bg: #fdedec;
+        --gpa-bg: #fff8e1;
+        --gpa-border: #ffb300;
+        --zebra-bg: #f7f9fc;
+        --zebra-strip: #eef1f7;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+        --red: #c0392b;
+        --red-light: #f5b7b1;
+        --green-light: #a9dfbf;
+        --blue-accent: #2c6fbb;
+        --grade-aplus: #1b8a3d;
+        --grade-a: #27ae60;
+        --grade-bplus: #2c6fbb;
+        --grade-b: #5dade2;
+        --grade-cplus: #f39c12;
+        --grade-c: #e67e22;
+        --grade-d: #e74c3c;
+        --grade-ng: #7f8c8d;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden; /* hide global scrollbar (scaling + inner container handles it) */
+        font-family: "Times New Roman", Georgia, serif;
+        background-color: var(--bg-color);
+    }
+
+    /* main scrolling container shows redirect-like page view */
+    #viewContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* ==================== 1. FRONT PAGE (Search Screen) Design ==================== */
+    .front-page-view {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 600px;
+        margin-top: 50px;
+        transition: all 0.3s ease;
+    }
+
+    /* front page fully hidden when result is active */
+    body.result-active .front-page-view {
+        display: none;
+    }
+
+    .front-header {
+        background: linear-gradient(135deg, var(--navy), #162d50, #1a3058);
+        border: 2px solid var(--gold);
+        padding: 25px 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(13,31,60,.25);
+        position: relative;
+        overflow: hidden;
+    }
+    .front-header::after {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle at 30% 50%, rgba(201,160,58,0.08) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .front-header h1 {
+        font-size: 24px;
+        color: #fff;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        letter-spacing: 0.5px;
+    }
+
+    .front-header .addr {
+        font-size: 14px;
+        color: var(--gold-light);
+        margin-bottom: 8px;
+    }
+
+    .front-header .exam {
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        padding: 4px 14px;
+        background: rgba(201,160,58,.15);
+        border: 1px solid var(--gold);
+        display: inline-block;
+    }
+
+    .search-card {
+        background: linear-gradient(135deg, var(--cream), #fff);
+        border: 2px solid var(--navy);
+        padding: 30px;
+        box-shadow: var(--shadow);
+    }
+
+    .sr-row {
+        display: flex;
+        gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+        .sr-row { flex-direction: column; }
+    }
+
+    .sr-row input {
+        flex: 1;
+        padding: 14px 15px;
+        border: 1.5px solid #b8b0a0;
+        font-size: 16px;
+        outline: none;
+        background: #fff;
+    }
+
+    .sr-row input:focus {
+        border-color: var(--gold);
+    }
+
+    .sr-row { position: relative; }
+    .suggest-box {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 2px solid var(--navy);
+        border-top: none;
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+    .suggest-box.show { display: block; }
+    .suggest-item {
+        padding: 10px 14px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    .suggest-item:hover { background: #f0f0f0; }
+    .suggest-item .sym { font-weight: bold; color: var(--navy); }
+    .suggest-item .nm { font-weight: bold; }
+    .suggest-item .prnt { color: #555; font-size: 11px; }
+    .suggest-item:last-child { border-bottom: none; }
+
+    .sr-row button {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--navy), #1a3058);
+        color: #fff;
+        border: 1px solid var(--gold);
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 1px;
+    }
+    .sr-row button:hover { background: linear-gradient(135deg, #162d50, #1e3868); box-shadow: 0 2px 12px rgba(201,160,58,.3); }
+    .sr-row button:active { transform: scale(0.97); }
+
+    .db-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #666;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    .error-box {
+        display: none;
+        background: #fff;
+        border: 2px solid var(--red);
+        padding: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .error-box.show { display: block; }
+    .error-box h3 { color: var(--red); margin-bottom: 5px; }
+
+
+    /* ==================== 2. MARK SHEET PAGE (redirect view) Design ==================== */
+    .marksheet-page-view {
+        display: none; /* hidden by default */
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* visible when result is active */
+    body.result-active .marksheet-page-view {
+        display: flex;
+    }
+
+    .nav-bar {
+        width: 100%;
+        max-width: 1400px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .nav-btn {
+        padding: 10px 22px;
+        font-size: 14px;
+        font-weight: bold;
+        border: 2px solid #000;
+        background: #fff;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+    .nav-btn-print { background: #000; color: #fff; }
+
+    /* --- fixed 1400px canvas that auto-scales on mobile --- */
+    #transformWrapper {
+        width: 1400px;
+        transform-origin: top center;
+        position: relative;
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+
+    .ledger-card {
+        background: linear-gradient(135deg, var(--paper-color), #fcfcfc);
+        width: 100%;
+        min-height: 900px;
+        border: 3px double var(--border-color);
+        padding: 45px;
+        box-shadow: var(--shadow);
+        position: relative;
+        z-index: 10;
+    }
+
+    .ledger-watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 110px;
+        font-weight: bold;
+        color: rgba(0, 0, 0, 0.03);
+        text-transform: uppercase;
+        letter-spacing: 10px;
+        white-space: nowrap;
+        pointer-events: none;
+        user-select: none;
+        width: 100%;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .ledger-header {
+        display: grid;
+        grid-template-columns: 140px 1fr 140px;
+        align-items: center;
+        text-align: center;
+        padding-bottom: 25px;
+        border-bottom: 2px dashed var(--border-color);
+        margin-bottom: 35px;
+    }
+
+    .emblem-box {
+        width: 110px;
+        height: 110px;
+        border: 2px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+        background: var(--paper-color);
+        padding: 5px;
+    }
+
+    .header-identity h1 {
+        font-size: 34px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    .header-identity h2 { font-size: 22px; margin-bottom: 12px; }
+    .header-identity h3 { font-size: 24px; font-weight: bold; margin-bottom: 12px; }
+
+    .badge-title-container {
+        display: inline-block;
+        border: 2px solid var(--border-color);
+        padding: 4px 30px;
+        background-color: #000;
+        color: #fff;
+    }
+    .badge-title-container h4 {
+        font-size: 38px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    /* student profile (3-column grid, premium look, safe on mobile) */
+    .student-profile-card {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 35px;
+        border: 1px solid var(--border-color);
+        padding: 25px;
+        background: linear-gradient(135deg, var(--cream), #fff);
+    }
+
+    .profile-item { display: flex; align-items: baseline; font-size: 18px; }
+    .profile-label { font-weight: bold; text-transform: uppercase; font-size: 16px; margin-right: 10px; white-space: nowrap; }
+    .profile-value { border-bottom: 1px dotted var(--border-color); flex-grow: 1; padding-bottom: 2px; font-weight: bold; text-transform: uppercase; }
+
+    /* grade ledger table design */
+    .ledger-table-wrap {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        margin-bottom: 35px;
+    }
+
+    .ledger-main-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid var(--border-color);
+    }
+
+    .ledger-main-table th, .ledger-main-table td {
+        border: 1px solid var(--border-color);
+        padding: 14px 18px;
+        font-size: 17px;
+    }
+
+    .ledger-main-table th {
+        background: linear-gradient(180deg, #e8eaf0, #d5d8e0);
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 3px solid var(--border-color);
+        color: var(--navy);
+    }
+    .ledger-main-table th.align-left, .ledger-main-table td.align-left { text-align: left; }
+    .ledger-main-table td { text-align: center; }
+    .ledger-main-table tbody tr:nth-child(even) { background-color: var(--zebra-bg); }
+
+    .w-sn { width: 70px; }
+    .w-gd { width: 150px; font-weight: bold; }
+    .grade-aplus { color: var(--grade-aplus); font-weight: bold; }
+    .grade-a { color: var(--grade-a); font-weight: bold; }
+    .grade-bplus { color: var(--grade-bplus); font-weight: bold; }
+    .grade-b { color: var(--grade-b); font-weight: bold; }
+    .grade-cplus { color: var(--grade-cplus); font-weight: bold; }
+    .grade-c { color: var(--grade-c); font-weight: bold; }
+    .grade-d { color: var(--grade-d); font-weight: bold; }
+    .grade-ng { color: var(--grade-ng); font-weight: bold; font-style: italic; }
+    .grade-abs { color: var(--grade-ng); font-style: italic; }
+
+    /* result summary ribbon */
+    .summary-ribbon {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+        padding: 15px 25px;
+        border: 2px solid var(--border-color);
+        background: linear-gradient(135deg, #fafafa, #f5f5f5);
+        transition: all 0.3s;
+    }
+
+    .summary-status { font-size: 22px; font-weight: bold; text-transform: uppercase; color: var(--pass-color); transition: all 0.3s; }
+    .summary-status.status-fail { color: var(--fail-color); }
+    .summary-ribbon.fail-ribbon { background: var(--fail-bg); border-color: var(--fail-color); }
+    .summary-gpa { background-color: var(--gpa-bg); border: 2px dashed var(--gpa-border); padding: 8px 25px; font-size: 24px; font-weight: bold; }
+    .summary-gpa.gpa-fail { background-color: var(--fail-bg); border-color: var(--fail-color); color: var(--fail-color); }
+
+    /* signature area */
+    .endorsement-row {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 60px;
+        padding-bottom: 10px;
+    }
+
+    .signature-container {
+        text-align: center;
+        width: 220px;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .signature-line { border-top: 1.5px solid var(--border-color); margin-bottom: 8px; }
+
+
+    /* ==================== 3. PRINT CUSTOMIZATION ==================== */
+    @media print {
+        html, body { overflow: visible !important; height: auto !important; background: #fff; }
+        #viewContainer { position: static !important; overflow: visible !important; padding: 0 !important; display: block !important; }
+        .front-page-view, .nav-bar { display: none !important; }
+        .marksheet-page-view { display: flex !important; }
+        #transformWrapper { width: 1400px; transform-origin: top center; position: static !important; }
+        .ledger-card { border: 3px double #000 !important; box-shadow: none !important; }
+        .ledger-watermark { display: none !important; }
+        .disclaimer-print { display: block !important; text-align: center !important; font-size: 10px !important; color: #999 !important; margin-top: 12px !important; border-top: 1px dashed #ccc !important; padding-top: 6px !important; }
+        .disclaimer-screen { display: none !important; }
+        @page { size: A4 landscape; margin: 5mm; }
+    }
+    .disclaimer-print { display: none; }
+    .disclaimer-screen { display: block; text-align: center; font-size: 11px; color: #999; margin-top: 8px; padding-top: 6px; }
+    .dev-contact { text-align: center; margin-top: 12px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .dev-contact a { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #1877f2; font-size: 13px; font-weight: bold; padding: 8px 16px; border: 1px solid #1877f2; border-radius: 6px; transition: all 0.2s; background: #fff; }
+    .dev-contact a:hover { background: #1877f2; color: #fff; }
+    .dev-contact a:hover svg { fill: #fff; }
+    .dev-contact .school-link { color: #1a5276; border-color: #1a5276; }
+    .dev-contact .school-link:hover { background: #1a5276; color: #fff; }
+    .dev-contact .school-link:hover svg { fill: #fff; }
+    @media (max-width: 600px) { .dev-contact { flex-direction: column; align-items: center; } .dev-contact a { width: 200px; justify-content: center; } }
+</style>
+</head>
+<body>
+
+    <div id="viewContainer">
+        
+        <div class="front-page-view" id="frontPage">
+            <div class="front-header">
+                <h1>Gurujajur Model Secondary School</h1>
+                <p class="addr">Rakshachaur, Dang, Nepal</p>
+                <p class="exam">GRADE XI ANNUAL EXAMINATION 2083</p>
+            </div>
+
+            <div class="search-card">
+                <div class="sr-row" style="position:relative;">
+                    <input type="text" id="searchInput" placeholder="Roll No./ Name / Father / Mother - Search anything..." autocomplete="off">
+                    <button id="searchBtn">SEARCH</button>
+                    <div id="suggestBox" class="suggest-box"></div>
+                </div>
+                <div class="db-info">
+                    <span style="visibility:hidden;">CV DATABASE SYSTEM (CV Connected)</span>
+                    <span>Search by Roll / Father / Mother / Name</span>
+                </div>
+            </div>
+
+            <div class="error-box" id="errorBox">
+                <h3>STUDENT NOT FOUND!</h3>
+                <p>Please enter correct Roll Number, Name, Father's Name or Mother's Name.</p>
+            </div>
+            <div class="disclaimer-screen">Developed by Kiran Chettri — This website is NOT affiliated with Gurujajur Model Secondary School. It is an unofficial result viewer.</div>
+            <div class="dev-contact">
+                <a href="https://gurujajurss.edu.np/" target="_blank" rel="noopener" class="school-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#1a5276"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    School Website
+                </a>
+                <a href="https://www.facebook.com/kiranoffical2" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    Contact Developer
+                </a>
+                <a href="https://officalkiran2.vercel.app/" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#333"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    Developer Website
+                </a>
+            </div>
+        </div>
+
+        <div class="marksheet-page-view" id="marksheetPage">
+            
+            <div class="nav-bar">
+                <button class="nav-btn" id="backBtn">← New Search (Back)</button>
+                <button class="nav-btn nav-btn-print" onclick="printMarksheet()">🖨️ Print</button>
+            </div>
+
+            <div id="transformWrapper">
+                <main class="ledger-card">
+                    
+                    <div class="ledger-watermark">GMS SCHOOL</div>
+
+                    <header class="ledger-header">
+                        <div class="emblem-box"><img src="logo.png" alt="School Logo" style="max-width:100px;max-height:100px;"></div>
+                        <div class="header-identity">
+                            <h1>Gurujajur Model Secondary School</h1>
+                            <h2>Rakshachaur, Dang, Nepal</h2>
+                            <h3>GRADE XI ANNUAL EXAMINATION 2083</h3>
+                            <div class="badge-title-container">
+                                <h4>Grade Ledger</h4>
+                            </div>
+                        </div>
+                        <div class="emblem-box"><img src="logo.png" alt="" style="max-width:100px;max-height:100px;"></div>
+                    </header>
+
+                    <section class="student-profile-card">
+                        <div class="profile-item"><span class="profile-label">Student's Name:</span><span class="profile-value" id="mName">-</span></div>
+                        <div class="profile-item"><span class="profile-label">Roll Number:</span><span class="profile-value" id="mRoll">-</span></div>
+                        <div class="profile-item"><span class="profile-label">Registration No:</span><span class="profile-value" id="mReg">-</span></div>
+                        <div class="profile-item"><span class="profile-label">Date of Birth:</span><span class="profile-value" id="mDob">-</span></div>
+                        <div class="profile-item"><span class="profile-label">Gender:</span><span class="profile-value" id="mGender">-</span></div>
+                        <div class="profile-item"><span class="profile-label">Grade:</span><span class="profile-value">XI</span></div>
+                        <div class="profile-item"><span class="profile-label">Stream:</span><span class="profile-value" id="mStream">-</span></div>
+                        <div class="profile-item"><span class="profile-label">Father's Name:</span><span class="profile-value" id="mFather">-</span></div>
+                        <div class="profile-item"><span class="profile-label">Mother's Name:</span><span class="profile-value" id="mMother">-</span></div>
+                    </section>
+
+                    <div class="ledger-table-wrap">
+                        <table class="ledger-main-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-sn">S.N.</th>
+                                    <th class="align-left">Subject Description</th>
+                                    <th>Theory (TH)</th>
+                                    <th>Practical (PR)</th>
+                                    <th class="w-gd">Final Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="marksheetBody"></tbody>
+                        </table>
+
+                        <div class="summary-ribbon">
+                            <div class="summary-status">Result Status: <strong id="mStatus">-</strong></div>
+                            <div class="summary-gpa" id="mGpa">Cumulative GPA: &nbsp;-</div>
+                        </div>
+                    </div>
+
+                    <footer class="endorsement-row">
+                        <div class="signature-container"><div class="signature-line"></div><span>Class Teacher</span></div>
+                        <div class="signature-container"><div class="signature-line"></div><span>Internal Examiner</span></div>
+                        <div class="signature-container"><div class="signature-line"></div><span>Principal</span></div>
+                    </footer>
+
+                    <div class="disclaimer-print">Developed by Kiran Chettri — Unofficial result viewer (not affiliated with the school)</div>
+
+                </main>
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="cv-data.js"></script>
+    <script>
+    // CV data loaded directly from cv-data.js
+    // cvData global variable defined in cv-data.js
+
+    // suggestion list logic
+    const searchInput = document.getElementById('searchInput');
+    const suggestBox = document.getElementById('suggestBox');
+
+    function updateSuggestions() {
+        const q = searchInput.value.trim().toUpperCase();
+        if (!q || q.length < 1) { suggestBox.classList.remove('show'); return; }
+
+        const matches = cvData.filter(st =>
+            st.rollNo === q ||
+            (st.symbolNo && st.symbolNo === q) ||
+            st.name.toUpperCase().includes(q) ||
+            st.father.toUpperCase().includes(q) ||
+            st.mother.toUpperCase().includes(q)
+        ).slice(0, 50);
+
+        if (matches.length === 0) { suggestBox.classList.remove('show'); return; }
+
+        suggestBox.innerHTML = '';
+        matches.forEach(st => {
+            const div = document.createElement('div');
+            div.className = 'suggest-item';
+            div.innerHTML = '<span class="sym">' + (st.symbolNo || st.rollNo) + '</span> — <span class="nm">' + st.name + '</span><br><span class="prnt">Father: ' + st.father + ' | Mother: ' + st.mother + '</span>';
+            div.addEventListener('click', function() {
+                suggestBox.classList.remove('show');
+                searchInput.value = st.name;
+                buildMarksheetView(st);
+            });
+            suggestBox.appendChild(div);
+        });
+        suggestBox.classList.add('show');
+    }
+
+    // hide suggestion on outside click
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.sr-row')) suggestBox.classList.remove('show');
+    });
+
+    // search and page redirect action
+    function executeSearch() {
+        const query = document.getElementById("searchInput").value.trim().toUpperCase();
+        const errorBox = document.getElementById("errorBox");
+        const errorText = errorBox.querySelector('p');
+        errorBox.classList.remove("show");
+
+        if (!query) return;
+
+        if (!cvData || cvData.length === 0) {
+            errorText.textContent = 'CV Database is empty! Check cv-data.js file.';
+            errorBox.classList.add("show");
+            return;
+        }
+
+        // search by rollNo (SN), symbolNo (exam roll), name, father, mother
+        const studentData = cvData.find(st => 
+            st.rollNo === query || 
+            (st.symbolNo && st.symbolNo === query) ||
+            st.name.toUpperCase().includes(query) || 
+            st.father.toUpperCase().includes(query) || 
+            st.mother.toUpperCase().includes(query)
+        );
+
+        if (studentData) {
+            buildMarksheetView(studentData);
+        } else {
+            errorText.textContent = 'Please enter correct Roll Number, Name, Father\'s Name or Mother\'s Name.';
+            errorBox.classList.add("show");
+        }
+    }
+
+    const subjectFullName = {
+        NEP: 'Nepali', ENG: 'English', MTH: 'Mathematics', SOC: 'Social Studies',
+        ACC: 'Accounting', BUS: 'Business Studies', ECO: 'Economics',
+        HTM: 'Hotel Management', COM: 'Computer Science',
+        PHY: 'Physics', CHE: 'Chemistry', BIO: 'Biology',
+        CDL: 'Child Development & Learning', HPE: 'Health & Physical Education',
+        ONP: 'Optional Nepali', OEN: 'Optional English', OMT: 'Optional Math',
+        EDU: 'Education', PSY: 'Psychology', HIS: 'History',
+        POL: 'Political Science', GEO: 'Geography'
+    };
+
+    // determine stream from subjects (GRADE 11 only)
+    function detectStream(marks) {
+        const subs = marks.map(m => subjectFullName[m.code] || m.code);
+        if (subs.some(s => /physics/i.test(s))) return 'SCIENCE';
+        if (subs.some(s => /hotel management/i.test(s))) return 'HOTEL MANAGEMENT';
+        if (subs.some(s => /child development/i.test(s))) return 'EDUCATION';
+        if (subs.some(s => /accounting/i.test(s))) {
+            if (subs.some(s => /computer/i.test(s))) return 'COMPUTER SCIENCE';
+            return 'MANAGEMENT';
+        }
+        if (subs.some(s => /health/i.test(s))) return 'EDUCATION';
+        if (subs.some(s => /optional/i.test(s))) return 'ARTS';
+        return 'GENERAL';
+    }
+
+    // marksheet builder and visual renderer
+    function buildMarksheetView(student) {
+        document.body.classList.add("result-active");
+        
+        document.getElementById("mName").textContent = student.name;
+        document.getElementById("mRoll").textContent = student.symbolNo || student.rollNo;
+        document.getElementById("mReg").textContent = student.regNo;
+        document.getElementById("mDob").textContent = student.dob;
+        document.getElementById("mGender").textContent = student.gender;
+        document.getElementById("mFather").textContent = student.father;
+        document.getElementById("mMother").textContent = student.mother;
+        document.getElementById("mStream").textContent = detectStream(student.marks);
+        document.getElementById("mGpa").innerHTML = "Cumulative GPA: &nbsp;" + student.gpa;
+        document.getElementById("mStatus").textContent = student.status;
+        const ribbon = document.querySelector('.summary-ribbon');
+        const statusEl = document.getElementById('mStatus');
+        const gpaEl = document.getElementById('mGpa');
+        ribbon.classList.remove('fail-ribbon');
+        statusEl.classList.remove('status-fail');
+        gpaEl.classList.remove('gpa-fail');
+        if (student.status === 'FAIL') {
+            ribbon.classList.add('fail-ribbon');
+            statusEl.classList.add('status-fail');
+            gpaEl.classList.add('gpa-fail');
+        }
+
+        const tbody = document.getElementById("marksheetBody");
+        tbody.innerHTML = "";
+        function gc(g) { return {'A+':'grade-aplus','A':'grade-a','B+':'grade-bplus','B':'grade-b','C+':'grade-cplus','C':'grade-c','D':'grade-d','NG':'grade-ng','Abs':'grade-abs'}[g] || ''; }
+        student.marks.forEach((m, index) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td class="align-left">${m.sub || subjectFullName[m.code] || m.code}</td>
+                <td class="${gc(m.th)}">${m.th}</td>
+                <td class="${gc(m.pr)}">${m.pr}</td>
+                <td class="w-gd ${gc(m.fin)}">${m.fin}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        triggerDynamicScaling();
+    }
+
+    // fit PC design on mobile using CSS Transform Scale
+    function triggerDynamicScaling() {
+        if (!document.body.classList.contains("result-active")) return;
+
+        const viewContainer = document.getElementById('viewContainer');
+        const wrapper = document.getElementById('transformWrapper');
+        const PC_CANVAS_WIDTH = 1400;
+
+        const currentViewportWidth = viewContainer.clientWidth;
+        const netAvailableWidth = currentViewportWidth - 30;
+
+        if (currentViewportWidth >= PC_CANVAS_WIDTH) {
+            wrapper.style.transform = `scale(1)`;
+            return;
+        }
+
+        const calculatedScale = netAvailableWidth / PC_CANVAS_WIDTH;
+        wrapper.style.transform = `scale(${calculatedScale})`;
+    }
+
+    // initial event controllers
+    window.onload = function() {
+        console.log('CV Connected: ' + cvData.length + ' records loaded from cv-data.js');
+
+        document.getElementById("searchBtn").addEventListener("click", function() { suggestBox.classList.remove('show'); executeSearch(); });
+        document.getElementById("searchInput").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") { suggestBox.classList.remove('show'); executeSearch(); }
+        });
+        document.getElementById("searchInput").addEventListener("input", updateSuggestions);
+
+        document.getElementById("backBtn").addEventListener("click", function() {
+            document.body.classList.remove("result-active");
+            document.getElementById("searchInput").value = "";
+            document.getElementById("errorBox").classList.remove("show");
+            suggestBox.classList.remove('show');
+        });
+
+        window.addEventListener('resize', triggerDynamicScaling);
+    };
+
+    // auto-scale to fit single A4 landscape page (exact screen style)
+    function printMarksheet() {
+        applyPrintScale();
+        window.print();
+    }
+    function applyPrintScale() {
+        const wrapper = document.getElementById('transformWrapper');
+        wrapper.dataset.origTransform = wrapper.style.transform || '';
+        wrapper.dataset.origOrigin = wrapper.style.transformOrigin || '';
+        const viewW = window.innerWidth;
+        const scaleA4 = 1050 / 1400; // A4 landscape printable width / canvas width
+        const scaleScreen = viewW >= 1400 ? 1 : (viewW - 30) / 1400;
+        wrapper.style.transform = 'scale(' + scaleA4.toFixed(3) + ')';
+        wrapper.style.transformOrigin = 'top center';
+    }
+    function removePrintScale() {
+        const wrapper = document.getElementById('transformWrapper');
+        wrapper.style.transform = wrapper.dataset.origTransform || '';
+        wrapper.style.transformOrigin = wrapper.dataset.origOrigin || '';
+    }
+    window.addEventListener('beforeprint', applyPrintScale);
+    window.addEventListener('afterprint', removePrintScale);
+    </script>
+</body>
+</html>
