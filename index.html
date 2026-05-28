@@ -74,8 +74,8 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        max-width: 600px;
-        margin-top: 50px;
+        max-width: 580px;
+        margin-top: 40px;
         transition: all 0.3s ease;
     }
 
@@ -85,88 +85,136 @@
     }
 
     .front-header {
-        background: linear-gradient(135deg, var(--navy), #162d50, #1a3058);
+        background: linear-gradient(135deg, var(--navy) 0%, #1a3058 40%, #203a60 100%);
         border: 2px solid var(--gold);
-        padding: 25px 20px;
-        margin-bottom: 20px;
+        padding: 30px 20px 25px;
+        margin-bottom: 25px;
         text-align: center;
-        box-shadow: 0 6px 20px rgba(13,31,60,.25);
+        box-shadow: 0 8px 30px rgba(13,31,60,.3);
         position: relative;
         overflow: hidden;
+        border-radius: 16px;
     }
     .front-header::after {
         content: '';
         position: absolute;
         top: -50%; left: -50%;
         width: 200%; height: 200%;
-        background: radial-gradient(circle at 30% 50%, rgba(201,160,58,0.08) 0%, transparent 60%);
+        background: radial-gradient(circle at 30% 50%, rgba(201,160,58,0.1) 0%, transparent 60%);
         pointer-events: none;
     }
+    .front-header::before {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 10%; right: 10%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        border-radius: 2px;
+    }
+
+    .front-logo { margin-bottom: 14px; }
+    .front-logo img { width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--gold); box-shadow: 0 0 25px rgba(201,160,58,0.35); object-fit: cover; }
 
     .front-header h1 {
-        font-size: 24px;
+        font-size: 22px;
         color: #fff;
         text-transform: uppercase;
-        margin-bottom: 5px;
-        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+        letter-spacing: 1px;
     }
 
     .front-header .addr {
-        font-size: 14px;
+        font-size: 13px;
         color: var(--gold-light);
-        margin-bottom: 8px;
+        margin-bottom: 10px;
+        letter-spacing: 0.3px;
     }
 
     .front-header .exam {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
         color: #fff;
-        padding: 4px 14px;
-        background: rgba(201,160,58,.15);
-        border: 1px solid var(--gold);
+        padding: 5px 18px;
+        background: rgba(201,160,58,.12);
+        border: 1.5px solid var(--gold);
         display: inline-block;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
     }
 
     .search-card {
-        background: linear-gradient(135deg, var(--cream), #fff);
-        border: 2px solid var(--navy);
-        padding: 30px;
-        box-shadow: var(--shadow);
+        background: #fff;
+        border: none;
+        padding: 30px 28px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+        border-radius: 16px;
+        border: 1px solid #e8e0d0;
     }
 
     .sr-row {
         display: flex;
-        gap: 12px;
+        gap: 10px;
     }
 
     @media (max-width: 600px) {
-        .sr-row { flex-direction: column; }
-    }
-
-    @media (max-width: 480px) {
-        .front-page-view { margin-top: 10px; }
-        .front-header { padding: 15px 10px; }
-        .front-header h1 { font-size: 18px; }
-        .front-header .addr { font-size: 12px; }
-        .front-header .exam { font-size: 11px; padding: 3px 10px; }
-        .search-card { padding: 15px; }
+        .sr-row { flex-direction: column; gap: 8px; }
+        .front-page-view { margin-top: 15px; }
+        .front-header { padding: 20px 14px 18px; margin-bottom: 18px; border-radius: 12px; }
+        .front-header h1 { font-size: 17px; }
+        .front-header .addr { font-size: 11px; }
+        .front-header .exam { font-size: 10px; padding: 4px 12px; }
+        .search-card { padding: 18px 14px; border-radius: 12px; }
         .sr-row input { padding: 12px 12px; font-size: 14px; }
         .sr-row button { padding: 12px; font-size: 14px; }
-        .dev-contact a { width: 100%; justify-content: center; }
-        .db-info { font-size: 10px; flex-direction: column; gap: 4px; align-items: center; }
+        .front-logo img { width: 65px; height: 65px; }
     }
 
     .sr-row input {
         flex: 1;
-        padding: 14px 15px;
-        border: 1.5px solid #b8b0a0;
-        font-size: 16px;
+        padding: 14px 16px;
+        border: 2px solid #d5cdc0;
+        font-size: 15px;
         outline: none;
-        background: #fff;
+        background: #fefcf9;
+        border-radius: 10px;
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .sr-row input:focus {
         border-color: var(--gold);
+        box-shadow: 0 0 0 4px rgba(201,160,58,0.12);
+        background: #fff;
+    }
+
+    .sr-row button {
+        padding: 14px 30px;
+        font-size: 15px;
+        font-weight: bold;
+        background: linear-gradient(135deg, var(--navy), #1a3058);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border-radius: 10px;
+        transition: transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 12px rgba(13,31,60,0.25);
+        white-space: nowrap;
+    }
+    .sr-row button:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(13,31,60,0.3); }
+    .sr-row button:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(13,31,60,0.2); }
+
+    .db-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 16px;
+        font-weight: bold;
+    }
+    @media (max-width: 480px) {
+        .db-info { font-size: 10px; flex-direction: column; gap: 6px; align-items: center; }
     }
 
     .sr-row { position: relative; }
@@ -197,29 +245,6 @@
     .suggest-item .nm { font-weight: bold; }
     .suggest-item .prnt { color: #555; font-size: 11px; }
     .suggest-item:last-child { border-bottom: none; }
-
-    .sr-row button {
-        padding: 14px 28px;
-        background: linear-gradient(135deg, var(--navy), #1a3058);
-        color: #fff;
-        border: 1px solid var(--gold);
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-        letter-spacing: 1px;
-    }
-    .sr-row button:hover { background: linear-gradient(135deg, #162d50, #1e3868); box-shadow: 0 2px 12px rgba(201,160,58,.3); }
-    .sr-row button:active { transform: scale(0.97); }
-
-    .db-info {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        color: #666;
-        margin-top: 15px;
-        font-weight: bold;
-    }
 
     .error-box {
         display: none;
@@ -266,8 +291,8 @@
     .nav-btn-print { background: #000; color: #fff; }
 
     @media (max-width: 480px) {
-        .nav-bar { flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .nav-btn { padding: 8px 14px; font-size: 12px; }
+        .nav-bar { flex-wrap: wrap; gap: 4px; justify-content: center; }
+        .nav-btn { padding: 6px 10px; font-size: 11px; }
     }
 
     /* --- marksheet: fixed desktop width, auto-zooms on mobile, native pinch-to-zoom works --- */
@@ -440,8 +465,9 @@
     }
 
     .summary-status { font-size: 22px; font-weight: bold; text-transform: uppercase; color: var(--pass-color); transition: all 0.3s; }
-    .summary-status.status-fail { color: var(--fail-color); }
-    .summary-ribbon.fail-ribbon { background: var(--fail-bg); border-color: var(--fail-color); }
+    .summary-status.status-fail { color: var(--fail-color); font-weight: 900; }
+    .summary-ribbon.fail-ribbon { background: var(--fail-bg); border-color: var(--fail-color); border-width: 3px; }
+    .summary-ribbon.fail-ribbon .summary-status strong { background: var(--fail-color); color: #fff; padding: 2px 14px; border-radius: 6px; }
     .summary-gpa { background-color: var(--gpa-bg); border: 2px dashed var(--gpa-border); padding: 8px 25px; font-size: 24px; font-weight: bold; }
     .summary-gpa.gpa-fail { background-color: var(--fail-bg); border-color: var(--fail-color); color: var(--fail-color); }
 
@@ -508,6 +534,220 @@
     .dev-contact .school-link:hover { background: #1a5276; color: #fff; }
     .dev-contact .school-link:hover svg { fill: #fff; }
     @media (max-width: 600px) { .dev-contact { flex-direction: column; align-items: center; } .dev-contact a { width: 200px; justify-content: center; } }
+    .front-page-view .dev-contact,
+    .front-page-view .disclaimer-screen { display: none !important; }
+
+    /* ==================== 4. LEADERBOARD SECTION ==================== */
+    .leaderboard-view {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+    body.leaderboard-active .front-page-view,
+    body.result-active .front-page-view {
+        display: none;
+    }
+    body.leaderboard-active .leaderboard-view {
+        display: flex;
+    }
+    body.leaderboard-active .marksheet-page-view {
+        display: none;
+    }
+    .lb-container {
+        width: 100%;
+        max-width: 1100px;
+        margin-top: 30px;
+    }
+    .lb-header {
+        background: linear-gradient(135deg, var(--navy), #162d50);
+        border: 2px solid var(--gold);
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .lb-logo { margin-bottom: 10px; }
+    .lb-logo img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--gold); box-shadow: 0 0 20px rgba(201,160,58,0.3); object-fit: cover; }
+    .lb-header h1 {
+        font-size: 28px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .lb-header p {
+        color: var(--gold-light);
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    .lb-controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .lb-controls .nav-btn {
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+    .lb-stats {
+        margin-left: auto;
+        font-size: 13px;
+        font-weight: bold;
+        color: var(--navy);
+        background: var(--gpa-bg);
+        padding: 8px 16px;
+        border: 1px solid var(--gpa-border);
+    }
+    .lb-table-wrap {
+        overflow-x: auto;
+        border: 2px solid var(--border-color);
+        box-shadow: var(--shadow);
+    }
+    .lb-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px;
+    }
+    .lb-table th, .lb-table td {
+        border: 1px solid var(--border-color);
+        padding: 12px 16px;
+        font-size: 15px;
+        text-align: center;
+    }
+    .lb-table th {
+        background: linear-gradient(180deg, #e8eaf0, #d5d8e0);
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 3px solid var(--border-color);
+        color: var(--navy);
+        font-size: 14px;
+    }
+    .lb-table td { text-align: center; }
+    .lb-table td.align-left { text-align: left; }
+    .lb-table tbody tr:nth-child(even) { background-color: var(--zebra-bg); }
+    .lb-table tbody tr:hover { background-color: #e8f0fe; }
+    .lb-table tbody tr.top-1 { background: linear-gradient(135deg, #fff9e6, #ffe88a); border-left: 5px solid gold; box-shadow: inset 0 0 20px rgba(255,215,0,0.12); }
+    .lb-table tbody tr.top-2 { background: linear-gradient(135deg, #f0f4ff, #d6e0f8); border-left: 5px solid #a0a0c0; box-shadow: inset 0 0 20px rgba(160,160,192,0.1); }
+    .lb-table tbody tr.top-3 { background: linear-gradient(135deg, #fff0e6, #fcd5b5); border-left: 5px solid #cd7f32; box-shadow: inset 0 0 20px rgba(205,127,50,0.1); }
+    .lb-table tbody tr.top-10 { background: linear-gradient(135deg, #e8f8e8, #c8e8c8); border-left: 5px solid #4CAF50; }
+    .lb-table tbody tr.top-20 { background: linear-gradient(135deg, #eaf0fa, #c8d8f0); border-left: 5px solid #2c6fbb; }
+    .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        min-width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 15px;
+        padding: 0 6px;
+    }
+    .rank-badge .medal { font-size: 16px; line-height: 1; }
+    .rank-1 { background: linear-gradient(135deg, gold, #ffd700); color: #333; border: 2px solid #b8960f; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+    .rank-2 { background: linear-gradient(135deg, #e8e8f0, #c0c0d0); color: #333; border: 2px solid #909098; box-shadow: 0 0 10px rgba(192,192,208,0.4); }
+    .rank-3 { background: linear-gradient(135deg, #f5d6c6, #e8b896); color: #333; border: 2px solid #a06830; box-shadow: 0 0 10px rgba(205,127,50,0.4); }
+    .rank-other { background: transparent; color: var(--text-color); font-weight: bold; }
+    .lb-gpa {
+        font-weight: bold;
+        color: var(--navy);
+        background: var(--gpa-bg);
+        padding: 4px 12px;
+        border-radius: 4px;
+    }
+    .lb-status-pass { display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: bold; background: #d5f5e3; color: #1b6b3a; font-size: 13px; }
+    .lb-status-fail { display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: bold; background: #fadbd8; color: #c0392b; font-size: 13px; }
+    .lb-stream-tag {
+        display: inline-block;
+        padding: 2px 10px;
+        font-size: 11px;
+        font-weight: bold;
+        border-radius: 3px;
+        text-transform: uppercase;
+    }
+    .stream-science { background: #d5f5e3; color: #1b6b3a; }
+    .stream-management { background: #d6eaf8; color: #1a5276; }
+    .stream-education { background: #fdebd0; color: #935116; }
+    .stream-hotel { background: #f5eef8; color: #6c3483; }
+    .stream-computer { background: #e8f8f5; color: #0e6655; }
+    .stream-arts { background: #fadbd8; color: #922b21; }
+    .stream-general { background: #f0f0f0; color: #555; }
+    .lb-notice {
+        background: #fff3cd;
+        border: 2px solid #f0b400;
+        padding: 10px 16px;
+        margin-bottom: 12px;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+        color: #664d00;
+        border-radius: 6px;
+        line-height: 1.5;
+    }
+    .lb-footer { text-align: center; margin-top: 18px; padding: 10px 0; }
+    .lb-school-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--navy); font-size: 14px; font-weight: bold; padding: 10px 24px; border: 2px solid var(--gold); border-radius: 8px; background: var(--cream); transition: all 0.2s; }
+    .lb-school-link:hover { background: var(--gold); color: #fff; }
+    .lb-school-link:hover svg { fill: #fff; }
+    .lb-empty {
+        text-align: center;
+        padding: 50px 20px;
+        font-size: 18px;
+        color: #888;
+    }
+    .lb-search-filter {
+        padding: 8px 14px;
+        border: 1.5px solid #b8b0a0;
+        font-size: 14px;
+        flex: 1;
+        min-width: 180px;
+        max-width: 300px;
+        outline: none;
+    }
+    .lb-search-filter:focus { border-color: var(--gold); }
+    @media (max-width: 600px) {
+        .lb-container { margin-top: 8px; }
+        .lb-header { padding: 12px 10px; margin-bottom: 10px; }
+        .lb-logo img { width: 45px; height: 45px; border-width: 2px; }
+        .lb-header h1 { font-size: 15px; letter-spacing: 0.3px; }
+        .lb-header p { font-size: 10px; }
+        .nav-bar .nav-btn { padding: 6px 10px; font-size: 11px; }
+        .lb-controls { flex-direction: column; align-items: stretch; gap: 6px; }
+        .lb-controls .nav-btn { width: 100%; text-align: center; }
+        .lb-stats { margin-left: 0; text-align: center; font-size: 11px; padding: 6px 10px; }
+        .lb-search-filter { max-width: 100%; font-size: 12px; padding: 6px 10px; min-width: unset; }
+        #lbSearchBtn { padding: 6px 12px !important; font-size: 11px !important; }
+        .lb-table th, .lb-table td { padding: 5px 3px; font-size: 10px; }
+        .lb-table th { font-size: 9px; }
+        .lb-table { min-width: unset; }
+        .rank-badge { min-width: 24px; height: 24px; font-size: 10px; border-radius: 50%; padding: 0 2px; border-width: 1.5px; }
+        .rank-badge .medal { font-size: 10px; }
+        .rank-1, .rank-2, .rank-3 { box-shadow: none; }
+        .lb-stream-tag { font-size: 8px; padding: 1px 4px; }
+        .lb-gpa { font-size: 10px; padding: 2px 6px; }
+        .lb-status-pass, .lb-status-fail { font-size: 10px; padding: 2px 8px; }
+        .lb-empty { font-size: 14px; padding: 30px 10px; }
+        .lb-notice { font-size: 10px; padding: 6px 10px; }
+        .lb-school-link { font-size: 12px; padding: 8px 16px; }
+        .lb-table tbody tr.top-1,
+        .lb-table tbody tr.top-2,
+        .lb-table tbody tr.top-3,
+        .lb-table tbody tr.top-10,
+        .lb-table tbody tr.top-20 { border-left-width: 3px; }
+    }
+    @media (max-width: 360px) {
+        .lb-header { padding: 8px 6px; }
+        .lb-logo img { width: 36px; height: 36px; }
+        .lb-header h1 { font-size: 13px; }
+        .lb-header p { font-size: 9px; }
+        .lb-table th, .lb-table td { padding: 4px 2px; font-size: 9px; }
+        .rank-badge { min-width: 20px; height: 20px; font-size: 8px; }
+        .rank-badge .medal { font-size: 8px; }
+        .nav-bar .nav-btn { font-size: 10px; padding: 5px 8px; }
+    }
+    @media print {
+        .leaderboard-view { display: none !important; }
+    }
 </style>
 </head>
 <body>
@@ -516,6 +756,9 @@
         
         <div class="front-page-view" id="frontPage">
             <div class="front-header">
+                <div class="front-logo">
+                    <img src="logo.png" alt="School Logo">
+                </div>
                 <h1>Gurujajur Model Secondary School</h1>
                 <p class="addr">Rakshachaur, Dang, Nepal</p>
                 <p class="exam">GRADE XI ANNUAL EXAMINATION 2083</p>
@@ -524,11 +767,11 @@
             <div class="search-card">
                 <div class="sr-row" style="position:relative;">
                     <input type="text" id="searchInput" placeholder="Roll No./ Name / Father / Mother - Search anything..." autocomplete="off">
-                    <button id="searchBtn">SEARCH</button>
+                    <button id="searchBtn" type="button">SEARCH</button>
                     <div id="suggestBox" class="suggest-box"></div>
                 </div>
                 <div class="db-info">
-                    <span style="visibility:hidden;">CV DATABASE SYSTEM (CV Connected)</span>
+                    <button id="leaderboardBtn" style="padding:4px 14px;font-size:12px;font-weight:bold;border:2px solid var(--gold);background:var(--navy);color:#fff;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;">🏆 Leaderboard</button>
                     <span>Search by Roll / Father / Mother / Name</span>
                 </div>
             </div>
@@ -554,11 +797,53 @@
             </div>
         </div>
 
+        <div class="leaderboard-view" id="leaderboardPage">
+            <div class="lb-container">
+                <div class="nav-bar">
+                    <button type="button" class="nav-btn" id="lbBackBtn">← Back to Search</button>
+                    <button type="button" class="nav-btn nav-btn-print" id="lbPrintBtn">💾 Save PDF</button>
+                </div>
+                <div class="lb-header">
+                    <div class="lb-logo"><img src="logo.png" alt="School Logo"></div>
+                    <h1>🏆 Leaderboard</h1>
+                    <p>Gurujajur Model Secondary School — Grade XI Annual Examination 2083</p>
+                </div>
+                <div class="lb-controls">
+                    <input type="text" class="lb-search-filter" id="lbFilter" placeholder="Filter by name / roll / stream..." autocomplete="off">
+                    <button id="lbSearchBtn" style="padding:8px 18px;font-size:13px;font-weight:bold;border:2px solid var(--gold);background:var(--navy);color:#fff;cursor:pointer;text-transform:uppercase;">Search</button>
+                    <span class="lb-stats" id="lbStats">Total: 0 Students</span>
+                </div>
+                <div class="lb-notice">⚠️ This is NOT the full official result. This is for informational purposes only.</div>
+                <div class="lb-table-wrap">
+                    <table class="lb-table">
+                        <thead>
+                            <tr>
+                                <th style="width:60px;">Rank</th>
+                                <th style="width:70px;">Roll No</th>
+                                <th class="align-left">Student Name</th>
+                                <th>Stream</th>
+                                <th style="width:100px;">GPA</th>
+                                <th style="width:80px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lbBody"></tbody>
+                    </table>
+                    <div class="lb-empty" id="lbEmpty" style="display:none;">No students found matching your filter.</div>
+                </div>
+                <div class="lb-footer">
+                    <a href="https://gurujajurss.edu.np/" target="_blank" rel="noopener" class="lb-school-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        Official School Website
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div class="marksheet-page-view" id="marksheetPage">
             
             <div class="nav-bar">
-                <button class="nav-btn" id="backBtn">← New Search (Back)</button>
-                <button class="nav-btn nav-btn-print" onclick="printMarksheet()">💾 Save PDF</button>
+                <button type="button" class="nav-btn" id="backBtn">← New Search (Back)</button>
+                <button type="button" class="nav-btn nav-btn-print" id="mPrintBtn">💾 Save PDF</button>
             </div>
 
             <div id="transformWrapper"><main class="ledger-card">
@@ -726,6 +1011,7 @@
 
     // marksheet builder and visual renderer
     function buildMarksheetView(student, noPush) {
+        document.body.classList.remove("leaderboard-active");
         document.body.classList.add("result-active");
         if (!noPush) {
             history.pushState({view: 'result', student: student}, '');
@@ -788,35 +1074,82 @@
         }
     }
 
-    // initial event controllers
-    window.onload = function() {
-        console.log('CV Connected: ' + cvData.length + ' records loaded from cv-data.js');
+    // ---- run immediately (DOM ready, script at end of body) ----
+    console.log('CV Connected: ' + cvData.length + ' records loaded from cv-data.js');
 
-        document.getElementById("searchBtn").addEventListener("click", function() { suggestBox.classList.remove('show'); executeSearch(); });
-        document.getElementById("searchInput").addEventListener("keydown", function(e) {
-            if (e.key === "Enter") { suggestBox.classList.remove('show'); executeSearch(); }
-        });
-        document.getElementById("searchInput").addEventListener("input", updateSuggestions);
+    if (!window.history.state || window.history.state.view !== 'leaderboard') {
+        history.replaceState({view: 'initial'}, '');
+    }
 
-        document.getElementById("backBtn").addEventListener("click", function() {
+    document.getElementById("searchBtn").addEventListener("click", function() { suggestBox.classList.remove('show'); executeSearch(); });
+    document.getElementById("searchInput").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") { suggestBox.classList.remove('show'); executeSearch(); }
+    });
+    document.getElementById("searchInput").addEventListener("input", updateSuggestions);
+
+    document.getElementById("backBtn").addEventListener("click", function() {
+        history.back();
+        setTimeout(function() {
+            if (document.body.classList.contains('result-active')) goToFrontPage();
+        }, 100);
+    });
+
+    document.getElementById("leaderboardBtn").addEventListener("click", showLeaderboard);
+
+    document.getElementById("lbPrintBtn").addEventListener("click", printLeaderboard);
+    document.getElementById("mPrintBtn").addEventListener("click", printMarksheet);
+
+    document.getElementById("lbBackBtn").addEventListener("click", function() {
+        goToFrontPage();
+        if (window.history.state && window.history.state.view === 'leaderboard') {
             history.back();
-        });
+        }
+    });
 
-        window.addEventListener('popstate', function(e) {
-            if (e.state && e.state.view === 'result') {
-                if (e.state.student) buildMarksheetView(e.state.student, true);
-                return;
-            }
+    document.getElementById("lbFilter").addEventListener("input", function() {
+        renderLeaderboard(this.value.trim());
+    });
+
+    document.getElementById("lbSearchBtn").addEventListener("click", function() {
+        const filterVal = document.getElementById('lbFilter').value.trim();
+        renderLeaderboard(filterVal);
+    });
+
+    document.getElementById("lbFilter").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            renderLeaderboard(this.value.trim());
+        }
+    });
+
+    window.addEventListener('popstate', function(e) {
+        if (e.state && e.state.view === 'result') {
+            if (e.state.student) buildMarksheetView(e.state.student, true);
+            return;
+        }
+        if (e.state && e.state.view === 'leaderboard') {
+            showLeaderboard(true);
+            return;
+        }
+        goToFrontPage();
+    });
+
+    // handle initial state showing (for browser back from leaderboard)
+    if (document.body.classList.contains('leaderboard-active') || document.body.classList.contains('result-active')) {
+        if (!window.history.state || window.history.state.view === 'initial') {
             goToFrontPage();
-        });
+        }
+    }
 
-        window.addEventListener('resize', function() {
-            if (document.body.classList.contains("result-active")) fitMarksheetToScreen();
-        });
-    };
+    // resize handler (also set on onload for after images load)
+    function handleResize() {
+        if (document.body.classList.contains("result-active")) fitMarksheetToScreen();
+    }
+    window.addEventListener('resize', handleResize);
+    window.onload = handleResize;
 
     function goToFrontPage() {
         document.body.classList.remove("result-active");
+        document.body.classList.remove("leaderboard-active");
         document.getElementById("searchInput").value = "";
         document.getElementById("errorBox").classList.remove("show");
         suggestBox.classList.remove('show');
@@ -825,11 +1158,193 @@
     window.addEventListener('beforeprint', function(){});
     window.addEventListener('afterprint', function(){});
 
-    function printMarksheet() {
-        window.print();
+    function loadScript(src) {
+        return new Promise(function(resolve, reject) {
+            var s = document.createElement('script');
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
+        });
+    }
+    function genPDF(el, filename, fmt, orient) {
+        if (!orient) orient = 'portrait';
+        var view = el.closest('.marksheet-page-view, .leaderboard-view');
+        var btn = view ? view.querySelector('.nav-btn-print, #mPrintBtn, #lbPrintBtn') : null;
+        var origBtnText = btn ? btn.textContent : '';
+        if (btn) { btn.textContent = '⏳ PDF...'; btn.disabled = true; }
+        if (typeof html2pdf === 'undefined') {
+            loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js').then(function() {
+                doGenPDF(el, filename, fmt, orient, btn, origBtnText);
+            }).catch(function() {
+                if (btn) { btn.textContent = origBtnText; btn.disabled = false; }
+                window.print();
+            });
+        } else {
+            doGenPDF(el, filename, fmt, orient, btn, origBtnText);
+        }
+    }
+    function doGenPDF(el, filename, fmt, orient, btn, origT) {
+        el.style.transform = 'none';
+        el.style.transformOrigin = '';
+        el.style.width = '1400px';
+
+        html2pdf().set({
+            margin: 5,
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.95 },
+            html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true, width: 1400 },
+            jsPDF: { unit: 'mm', format: fmt, orientation: orient }
+        }).from(el).save().then(function() {
+            el.style.transform = '';
+            el.style.transformOrigin = '';
+            el.style.width = '';
+            if (btn) { btn.textContent = origT; btn.disabled = false; }
+        }).catch(function() {
+            el.style.transform = '';
+            el.style.transformOrigin = '';
+            el.style.width = '';
+            if (btn) { btn.textContent = origT; btn.disabled = false; }
+            window.print();
+        });
     }
 
-    // Pull-to-refresh: pull down at top of marksheet to go back to search
+    function printMarksheet() {
+        var el = document.getElementById('transformWrapper');
+        if (!el) { window.print(); return; }
+        var name = (document.getElementById('mName').textContent || 'marksheet').replace(/[^a-zA-Z0-9]/g, '_');
+        genPDF(el, name + '_GradeLedger.pdf', 'a4', 'landscape');
+    }
+
+    // ==================== LEADERBOARD FUNCTIONS ====================
+    function getStreamClass(stream) {
+        const map = {
+            'SCIENCE': 'stream-science',
+            'MANAGEMENT': 'stream-management',
+            'EDUCATION': 'stream-education',
+            'HOTEL MANAGEMENT': 'stream-hotel',
+            'COMPUTER SCIENCE': 'stream-computer',
+            'ARTS': 'stream-arts',
+            'GENERAL': 'stream-general'
+        };
+        return map[stream] || 'stream-general';
+    }
+
+    function countInvalidSubjects(marks) {
+        return marks.filter(m => m.fin === 'NG' || m.fin === 'Abs').length;
+    }
+
+    function buildLeaderboard() {
+        const withCounts = cvData.map(st => ({
+            ...st,
+            invalidCount: countInvalidSubjects(st.marks)
+        }));
+
+        withCounts.sort((a, b) => {
+            if (a.invalidCount !== b.invalidCount) return a.invalidCount - b.invalidCount;
+            const gpaA = parseFloat(a.gpa);
+            const gpaB = parseFloat(b.gpa);
+            if (!isNaN(gpaA) && !isNaN(gpaB)) return gpaB - gpaA;
+            if (!isNaN(gpaA)) return -1;
+            if (!isNaN(gpaB)) return 1;
+            return 0;
+        });
+
+        let passRank = 0;
+        let lastGpa = null;
+        return withCounts.map((st, i) => {
+            const gpa = parseFloat(st.gpa);
+            const isPass = st.status === 'PASS' && !isNaN(gpa);
+            if (!isPass) { st.rank = null; return st; }
+            if (gpa !== lastGpa) { passRank++; lastGpa = gpa; }
+            st.rank = passRank;
+            return st;
+        }).slice(0, 20);
+    }
+
+    let lbData = [];
+    function renderLeaderboard(filterText) {
+        const tbody = document.getElementById('lbBody');
+        const empty = document.getElementById('lbEmpty');
+        const stats = document.getElementById('lbStats');
+        tbody.innerHTML = '';
+
+        let filtered = lbData;
+        if (filterText) {
+            const q = filterText.toUpperCase();
+            filtered = lbData.filter(st =>
+                st.name.toUpperCase().includes(q) ||
+                (st.symbolNo && st.symbolNo.includes(q)) ||
+                st.rollNo.includes(q) ||
+                detectStream(st.marks).includes(q)
+            );
+        }
+
+        if (filtered.length === 0) {
+            empty.style.display = 'block';
+            stats.textContent = 'Total: 0 Students';
+            return;
+        }
+        empty.style.display = 'none';
+        stats.textContent = 'Total: ' + lbData.length + ' Students (showing ' + filtered.length + ')';
+
+        filtered.forEach(st => {
+            const tr = document.createElement('tr');
+            if (st.rank === 1) tr.className = 'top-1';
+            else if (st.rank === 2) tr.className = 'top-2';
+            else if (st.rank === 3) tr.className = 'top-3';
+            else if (st.rank !== null && st.rank <= 10) tr.className = 'top-10';
+            else if (st.rank !== null && st.rank <= 20) tr.className = 'top-20';
+
+            let rankHtml;
+            if (st.rank === null) rankHtml = '<span class="rank-badge rank-other" style="color:#999;">—</span>';
+            else if (st.rank === 1) rankHtml = '<span class="rank-badge rank-1"><span class="medal">🥇</span> 1</span>';
+            else if (st.rank === 2) rankHtml = '<span class="rank-badge rank-2"><span class="medal">🥈</span> 2</span>';
+            else if (st.rank === 3) rankHtml = '<span class="rank-badge rank-3"><span class="medal">🥉</span> 3</span>';
+            else rankHtml = '<span class="rank-badge rank-other">' + (st.rank <= 20 ? '#' : '') + st.rank + '</span>';
+
+            const stream = detectStream(st.marks);
+            const streamClass = getStreamClass(stream);
+            const isPass = st.status === 'PASS' && st.gpa !== '-' && st.gpa !== undefined && st.gpa !== null;
+
+            tr.innerHTML =
+                '<td>' + rankHtml + '</td>' +
+                '<td>' + (st.symbolNo || st.rollNo) + '</td>' +
+                '<td class="align-left" style="font-weight:bold;">' + st.name + '</td>' +
+                '<td><span class="lb-stream-tag ' + streamClass + '">' + stream + '</span></td>' +
+                '<td><span class="lb-gpa">' + st.gpa + '</span></td>' +
+                '<td><span class="' + (isPass ? 'lb-status-pass' : 'lb-status-fail') + '">' + (isPass ? 'PASS' : 'FAIL') + '</span></td>';
+
+            tr.style.cursor = 'pointer';
+            tr.addEventListener('click', function() {
+                buildMarksheetView(st);
+            });
+            tbody.appendChild(tr);
+        });
+    }
+
+    function showLeaderboard(noPush) {
+        document.body.classList.remove('result-active');
+        document.body.classList.add('leaderboard-active');
+        if (!noPush) {
+            history.pushState({view: 'leaderboard'}, '');
+        }
+        lbData = buildLeaderboard();
+        document.getElementById('lbFilter').value = '';
+        renderLeaderboard('');
+    }
+
+    function printLeaderboard() {
+        var el = document.querySelector('.lb-container');
+        if (!el) { window.print(); return; }
+        var navs = el.closest('.leaderboard-view').querySelector('.nav-bar');
+        if (navs) navs.style.display = 'none';
+        genPDF(el, 'Merit_Leaderboard.pdf', 'a4', 'landscape');
+        setTimeout(function() { if (navs) navs.style.display = ''; }, 500);
+    }
+
+    // leaderboard event listeners (set up in onload)
+    
     let ptrStartY = 0;
     let ptrPulling = false;
     let ptrActive = false;
